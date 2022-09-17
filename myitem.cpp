@@ -15,7 +15,7 @@ MyItem::MyItem()
 QRectF MyItem::boundingRect() const
 {
     // outer most edges
-    return QRectF(0,0,1920,1080);
+    return QRectF(0,0,this->width, this->height);
    // return QRectF(0,0,100,100);
 }
 
@@ -26,7 +26,7 @@ void MyItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
 
 
         painter->drawEllipse(-1,-1,1,1);
-        painter->drawPixmap(0,0,1920,1080,pxm);
+        painter->drawPixmap(0,0,this->width,this->height,pxm);
 
         foreach(QPointF point, list){
             painter->drawEllipse(point.x(),

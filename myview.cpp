@@ -47,7 +47,7 @@ QPen pen(Qt::blue);
 
 void MyView::zoomIn()
 {
-    if(n<30){
+    if(n<50){
 
     qDebug()<<"in";
     if(scaleView(qreal(1.05)))
@@ -323,9 +323,20 @@ void MyView::update_ladmarks(QList<QPointF> source)
 
 void MyView::load(QString filapath)
 {
-  //  deleteItemsFromGroup(points);
+    rect->moveBy(0,0);
+    area->moveBy(0,0);
+    deleteItemsFromGroup(points);
     rect->load(filapath);
-  //  setSceneRect(0,0,item->width,item->height);
+    setSceneRect(0,0,rect->width,rect->height);
+    area->setRect(0,0,rect->width,rect->height);
+
+    area_w=rect->width;
+    area_h=rect->height;
+
+    rect_w=rect->width;
+    rect_h=rect->height;
+
+
 }
 
 void MyView::mouseMoveEvent(QMouseEvent *event)
