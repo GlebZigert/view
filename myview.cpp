@@ -11,25 +11,31 @@ MyView::MyView(QWidget *parent)
 
     scene->addEllipse(0,0,1,1);
 
-    area_h=100;
-    area_w=100;
 
-    rect_h=180;
-    rect_w=180;
+    area_w=1000;
+    area_h=800;
+
+    rect_w=1000;
+    rect_h=800;
+
+    scene->setSceneRect(0,0,1000,800);
 
     scale=1;
     flag = false;
-
+QPen pen(Qt::blue);
     area = new QGraphicsRectItem(0,0,area_w,area_h);
     area->setFlag(QGraphicsItem::ItemIsMovable,false);
+    area->setPen(pen);
     scene->addItem(area);
-
+   QPen penRed(Qt::red);
     rect = new QGraphicsRectItem(0,0,rect_w,rect_h);
+
+
     rect->setFlag(QGraphicsItem::ItemIsMovable,true);
     scene->addItem(rect);
 
     qDebug()<<"1: "<<rect->x()<<" "<<rect->y();
-    rect->moveBy(-10,-10);
+    rect->moveBy(0,0);
     qDebug()<<"2: "<<rect->x()<<" "<<rect->y();
 }
 
@@ -49,7 +55,7 @@ void MyView::scaleView(qreal scaleFactor)
 {
     QPointF f =mapToScene(viewport()->mapFromGlobal(QCursor::pos()));
   //  scene->addRect(f.x(),f.y(),1,1);
-    QPointF p =rect->mapFromScene(f);
+
 
     //Точка масштабирования
 
@@ -98,14 +104,121 @@ void MyView::scaleView(qreal scaleFactor)
         qDebug()<<"true";
     }
     else{
+
+bool res=false;
+
+        if((a1<b1)
+                &&(a2>=b2)
+                &&(a3>=b3)
+                &&(a4>=b4)){
+
+            f.setX(0);
+            res=true;
+        }
+
+        if((a1<b1)
+                &&(a2<b2)
+                &&(a3>=b3)
+                &&(a4>=b4)){
+
+            f.setX(0);
+            f.setY(0);
+            res=true;
+        }
+
+        if((a1<b1)
+                &&(a2>=b2)
+                &&(a3>=b3)
+                &&(a4<b4)){
+
+            f.setX(0);
+            f.setY(area_h);
+            res=true;
+        }
+
+//=======================================
+        if((a1>=b1)
+                &&(a2<b2)
+                &&(a3>=b3)
+                &&(a4>=b4)){
+
+            f.setY(0);
+            res=true;
+        }
+
+
+
+        if((a1>=b1)
+                &&(a2<b2)
+                &&(a3<b3)
+                &&(a4>=b4)){
+
+            f.setX(area_w);
+            f.setY(0);
+            res=true;
+        }
+
+ //=====================================
+
+        if((a1>=b1)
+                &&(a2>=b2)
+                &&(a3<b3)
+                &&(a4>=b4)){
+
+            f.setX(area_w);
+            res=true;
+        }
+
+
+
+        if((a1>=b1)
+                &&(a2>=b2)
+                &&(a3<b3)
+                &&(a4<b4)){
+
+            f.setX(area_w);
+            f.setY(area_h);
+            res=true;
+        }
+
+
+        if((a1>=b1)
+                &&(a2>=b2)
+                &&(a3>=b3)
+                &&(a4<b4)){
+
+            f.setY(area_h);
+            res=true;
+        }
+  /*
+        if((a2<b2)&(a4>b4)){
+
+            f.setY(0);
+            res=true;
+        }
+
+        if((a2>b2)&(a4<b4)){
+
+            f.setY(area_h);
+            res=true;
+        }
+        */
+
+
+
+
+            if(!res){
         qDebug()<<"false!!!";
             return;
+           }
+
     }
     scale*=scaleFactor;
 
 
     //   QPointF q = neq QPointF(0,0);
-    QPointF bgn = rect->mapToScene(0,0);
+
+     QPointF p =rect->mapFromScene(f);
 
     qDebug()<<"p: "<<p.x()<<" "<<p.y();
     rect->setTransformOriginPoint(p);
@@ -163,13 +276,15 @@ void MyView::mouseMoveEvent(QMouseEvent *event)
 
          qDebug()<<rect->mapToScene(0,0).x()<<" "<<area->mapToScene(0,0).x();
 
-        if(rect->mapToScene(0,0).x()+x<area->mapToScene(0,0).x())
-        if(rect->mapToScene(rect_w,0).x()+x>area->mapToScene(area_w,0).x())
+        if(rect->mapToScene(0,0).x()+x<=area->mapToScene(0,0).x())
+        if(rect->mapToScene(rect_w,0).x()+x>=area->mapToScene(area_w,0).x())
 
-        if(rect->mapToScene(0,0).y()+y<area->mapToScene(0,0).y())
-        if(rect->mapToScene(0,rect_h).y()+y>area->mapToScene(0,area_h).y()){
+        if(rect->mapToScene(0,0).y()+y<=area->mapToScene(0,0).y())
+        if(rect->mapToScene(0,rect_h).y()+y>=area->mapToScene(0,area_h).y()){
          rect->moveBy(x,y);
      }
+
+
 // rect->moveBy(x,y);
      prev=f;
 
@@ -206,7 +321,7 @@ void MyView::mouseReleaseEvent(QMouseEvent *event)
 
 void MyView::wheelEvent(QWheelEvent *event)
 {
-/*
+
     QPointF f =mapToScene(viewport()->mapFromGlobal(QCursor::pos()));
 
     QPointF ff=area->mapFromScene(f);
@@ -216,7 +331,7 @@ void MyView::wheelEvent(QWheelEvent *event)
    if(res!=true){
    return;
    }
-   */
+
 
        if (event->modifiers() == Qt::ControlModifier)
        {

@@ -13,7 +13,7 @@ class MyView : public QGraphicsView
 private:
     QGraphicsScene* scene;
 
-    QGraphicsItem *area;
+    QGraphicsRectItem *area;
 
     QGraphicsItem *rect;
 
