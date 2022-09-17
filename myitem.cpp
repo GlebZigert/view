@@ -5,7 +5,7 @@
 
 MyItem::MyItem()
 {
-    load("/home/administrator/jekson.jpeg");
+    load("/home/administrator/8299.jpg");
     this->width=pxm.width();
     this->height=pxm.height();
 
@@ -15,7 +15,7 @@ MyItem::MyItem()
 QRectF MyItem::boundingRect() const
 {
     // outer most edges
-    return QRectF(0,0,100,100);
+    return QRectF(0,0,1920,1080);
    // return QRectF(0,0,100,100);
 }
 
@@ -26,7 +26,7 @@ void MyItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
 
 
         painter->drawEllipse(-1,-1,1,1);
-        painter->drawPixmap(0,0,100,100,pxm);
+        painter->drawPixmap(0,0,1920,1080,pxm);
 
         foreach(QPointF point, list){
             painter->drawEllipse(point.x(),

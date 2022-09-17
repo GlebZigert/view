@@ -6,17 +6,36 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>500</width>
+    <height>400</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <widget class="MyView" name="widget" native="true"/>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="MyView" name="widget" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>1920</width>
+        <height>1080</height>
+       </size>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -25,12 +44,24 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>500</width>
      <height>22</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuLOAD">
+    <property name="title">
+     <string>LOAD</string>
+    </property>
+    <addaction name="actionLOAD"/>
+   </widget>
+   <addaction name="menuLOAD"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionLOAD">
+   <property name="text">
+    <string>LOAD</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>

@@ -11,14 +11,18 @@ MyView::MyView(QWidget *parent)
 
     scene->addEllipse(0,0,1,1);
 
+    points = new QGraphicsItemGroup();
 
-    area_w=1000;
-    area_h=800;
 
-    rect_w=1000;
-    rect_h=800;
 
-    scene->setSceneRect(0,0,1000,800);
+    area_w=1920;
+    area_h=1080;
+
+    rect_w=1920;
+    rect_h=1080;
+
+    n=1;
+    scene->setSceneRect(0,0,1920,1080);
 
     scale=1;
     flag = false;
@@ -28,7 +32,7 @@ QPen pen(Qt::blue);
     area->setPen(pen);
     scene->addItem(area);
    QPen penRed(Qt::red);
-    rect = new QGraphicsRectItem(0,0,rect_w,rect_h);
+    rect = new MyItem();
 
 
     rect->setFlag(QGraphicsItem::ItemIsMovable,true);
@@ -37,21 +41,63 @@ QPen pen(Qt::blue);
     qDebug()<<"1: "<<rect->x()<<" "<<rect->y();
     rect->moveBy(0,0);
     qDebug()<<"2: "<<rect->x()<<" "<<rect->y();
+
+     scene->addItem(points);
 }
 
 void MyView::zoomIn()
 {
+    if(n<30){
+
     qDebug()<<"in";
-    scaleView(qreal(1.05));
+    if(scaleView(qreal(1.05)))
+        n++;
+    }
 }
 
 void MyView::zoomOut()
 {
+    if(n>2){
     qDebug()<<"out";
-    scaleView(1/qreal(1.05));
+    if(scaleView(1/qreal(1.05)))
+        n--;
+    }else{
+
+        //взять 0 0 ректа и совметить с базой
+
+
+    }
 }
 
-void MyView::scaleView(qreal scaleFactor)
+void MyView::deleteItemsFromGroup(QGraphicsItemGroup *group)
+{
+    foreach( QGraphicsItem *item, scene->items(group->boundingRect())) {
+       if(item->group() == group ) {
+          delete item;
+       }
+}
+}
+
+void MyView::update_meta()
+{
+    qDebug()<<"update_meta";
+    deleteItemsFromGroup(points);
+
+    foreach(QPointF point, list){
+
+    QPointF xx = rect->mapToScene(point);
+
+//    qDebug()<<"xx: "<<xx.x()<<" "<<xx.y();
+    QGraphicsEllipseItem *circle = new QGraphicsEllipseItem(xx.x(),xx.y(),2,2,nullptr);
+
+
+            circle->setPen(QPen(Qt::green, 2));
+
+    points->addToGroup(circle);
+    }
+}
+
+bool MyView::scaleView(qreal scaleFactor)
 {
     QPointF f =mapToScene(viewport()->mapFromGlobal(QCursor::pos()));
   //  scene->addRect(f.x(),f.y(),1,1);
@@ -86,7 +132,7 @@ void MyView::scaleView(qreal scaleFactor)
     a2*=scaleFactor;
     a3*=scaleFactor;;
     a4*=scaleFactor;
-
+/*
     qDebug()<<a1<<" "
 <<a2<<" "
 <<a3<<" "
@@ -95,6 +141,7 @@ void MyView::scaleView(qreal scaleFactor)
 <<b2<<" "
 <<b3<<" "
 <<b4<<" ";
+    */
 
     if((a1>b1)
             &&(a2>b2)
@@ -190,7 +237,7 @@ bool res=false;
             f.setY(area_h);
             res=true;
         }
-  /*
+
         if((a2<b2)&(a4>b4)){
 
             f.setY(0);
@@ -202,14 +249,14 @@ bool res=false;
             f.setY(area_h);
             res=true;
         }
-        */
 
 
 
 
-            if(!res){
+
+          if(!res){
         qDebug()<<"false!!!";
-            return;
+           return false;
            }
 
     }
@@ -220,7 +267,7 @@ bool res=false;
 
      QPointF p =rect->mapFromScene(f);
 
-    qDebug()<<"p: "<<p.x()<<" "<<p.y();
+   // qDebug()<<"p: "<<p.x()<<" "<<p.y();
     rect->setTransformOriginPoint(p);
     //   item->addPoint(p);
 
@@ -234,11 +281,11 @@ bool res=false;
     //    if(rect->mapToScene(0,rect_h).y()>area->mapToScene(0,area_h).y()){
 
     rect->setScale(scale);
-    qDebug()<<"point2: "<<p.x()<<" "<<p.y();
+ //   qDebug()<<"point2: "<<p.x()<<" "<<p.y();
 
     QPointF point3 = rect->mapToScene(p);
 
-    qDebug()<<"point3: "<<point3.x()<<" "<<point3.y();
+//    qDebug()<<"point3: "<<point3.x()<<" "<<point3.y();
 
     rect->moveBy((f.x()-point3.x()),(f.y()-point3.y()));
 
@@ -254,6 +301,8 @@ bool res=false;
 
 */
     //   }
+    update_meta();
+    return true;
 }
 
 
@@ -261,6 +310,22 @@ bool res=false;
 MyView::~MyView()
 {
 
+}
+
+void MyView::update_ladmarks(QList<QPointF> source)
+{
+    qDebug()<<"update_ladmarks";
+    list.clear();
+    list.append(source);
+    qDebug()<<"landmarks size: "<<list.size();
+    update_meta();
+}
+
+void MyView::load(QString filapath)
+{
+  //  deleteItemsFromGroup(points);
+    rect->load(filapath);
+  //  setSceneRect(0,0,item->width,item->height);
 }
 
 void MyView::mouseMoveEvent(QMouseEvent *event)
@@ -282,6 +347,7 @@ void MyView::mouseMoveEvent(QMouseEvent *event)
         if(rect->mapToScene(0,0).y()+y<=area->mapToScene(0,0).y())
         if(rect->mapToScene(0,rect_h).y()+y>=area->mapToScene(0,area_h).y()){
          rect->moveBy(x,y);
+             update_meta();
      }
 
 

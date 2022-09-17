@@ -6,6 +6,8 @@
 #include <QGraphicsScene>
 #include <QSharedPointer>
 #include <QWheelEvent>
+#include <myitem.h>
+#include <QGraphicsItemGroup>
 
 class MyView : public QGraphicsView
 {
@@ -15,10 +17,12 @@ private:
 
     QGraphicsRectItem *area;
 
-    QGraphicsItem *rect;
+      QGraphicsItemGroup  *points;
+
+    MyItem *rect;
 
     QPointF prev;
-
+    int n;
     int area_h;
     int area_w;
 
@@ -28,15 +32,19 @@ private:
     bool flag;
 
     qreal scale;
-
+     QList<QPointF> list;
     void zoomIn();
     void zoomOut();
+    void deleteItemsFromGroup(QGraphicsItemGroup *group);
+     void update_meta();
 
-    void scaleView(qreal scaleFactor);
+    bool scaleView(qreal scaleFactor);
 
 public:
     MyView(QWidget *parent = 0);
     ~MyView();
+    void update_ladmarks( QList<QPointF> list);
+    void load(QString filapath);
 
 protected:
     void mouseMoveEvent(QMouseEvent *event) override;

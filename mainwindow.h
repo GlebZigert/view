@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "rest.h"
+#include <QStandardPaths>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -17,8 +19,15 @@ public:
 
 
 
+
+
+private slots:
+    void on_actionLOAD_triggered();
+   void draw_landmarks(QList<QPointF>);
 private:
     Ui::MainWindow *ui;
+
+    Rest rest;
 
 
 
