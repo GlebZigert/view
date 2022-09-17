@@ -5,6 +5,7 @@
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QSharedPointer>
+#include <QWheelEvent>
 
 class MyView : public QGraphicsView
 {
@@ -26,6 +27,13 @@ private:
 
     bool flag;
 
+    qreal scale;
+
+    void zoomIn();
+    void zoomOut();
+
+    void scaleView(qreal scaleFactor);
+
 public:
     MyView(QWidget *parent = 0);
     ~MyView();
@@ -34,6 +42,8 @@ protected:
     void mouseMoveEvent(QMouseEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
+
+    void wheelEvent(QWheelEvent *event) override;
 signals:
 
 };
